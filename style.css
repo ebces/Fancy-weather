@@ -1,0 +1,185 @@
+body {
+    margin: 0;
+    background-image: url(assets/images/2.jpg);
+    font-family: sans-serif;
+}
+
+main .wrapper {
+    height: 70vh;
+}
+
+.wrapper {
+    margin: 50px auto 0;
+    display: flex;
+    width: 95%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.control {
+    display: flex;
+    width: 300px;
+}
+
+.control__refresh-image {
+    width: 40%;
+}
+
+.control__arrow-image {
+    width: 30%;
+}
+
+.control__button,
+.search__button {
+    width: 50px;
+    height: 50px;
+    margin: 0 10px;
+    border-radius: 10px;
+    border: none;
+    color: #ffffff;
+    background-color: #ffffff54;
+}
+
+.control__button--last-button1 {
+    border-radius: 10px 0 0 10px;
+}
+
+.control__button--last-button2 {
+    border-radius: 0 10px 10px 0;
+    margin-left: -10px;
+}
+
+.control__button--refresh {
+    background-image: url(assets/images/refresh.svg);
+    background-color: #0086fc00;
+    background-size: 100%;
+}
+
+.control__button--language {
+    line-height: 50px;
+    padding-left: 5px;
+    position: relative;
+}
+
+.control__button--language-ru {
+    position: absolute;
+    left: -10px;
+    top: 0;
+    opacity: 0;
+    transition: .3s;
+    text-align: center;
+}
+
+.control__button--language:hover .control__button--language-ru {
+    opacity: 1;
+    left: -10px;
+    top: 50px;
+    width: 100%;
+}
+
+.control__arrow-image {
+    transition: .5s;
+}
+
+.control__button--language:hover .control__arrow-image {
+    transform: rotate(180deg);
+}
+
+.search__input {
+    height: 50px;
+    color: #ffffff;
+    background-color: #4b4b4b75;
+    border: none;
+    border-radius: 10px;
+}
+
+.search__button {
+    width: 100px;
+}
+
+.whether {
+    width: 50%;
+    color: #ffffff;
+}
+
+.whether__city {
+    font-size: 5vw;
+    font-weight: bold;
+    margin: 20px 0 0 0;
+}
+
+.whether__date {
+    font-size: 2vw;
+    margin: 0;
+}
+
+.whether__whether-now {
+    display: flex;
+    justify-content: space-around;
+}
+
+.whether__temperature {
+    font-size: 20vw;
+    font-weight: bold;
+    margin: 0;
+}
+
+.whether__image {
+    width: 10vw;
+}
+
+.whether__forecast {
+    display: flex;
+    justify-content: space-around;
+}
+
+.whether__day {
+    margin: 0;
+}
+
+.whether__forecast-temperature {
+    font-size: 5vw;
+}
+
+.whether__forecast-image {
+    width: 4vw;
+}
+
+.location {
+    color: #ffffff;
+}
+
+#map {
+    width: 35vw;
+    height: 35vw;
+    border-radius: 10px;
+}
+
+@media (max-width: 670px) {
+    .wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    header .wrapper {
+        flex-direction: column-reverse;
+    }
+
+    .control {
+        justify-content: center;
+    }
+
+    .location {
+        width: 100%;
+    }
+
+    .whether {
+        width: 100%;
+    }
+
+    #map {
+        margin-top: 10px;
+        width: 100%;
+        height: 50vw;
+    }
+}

@@ -16,12 +16,12 @@
           <img src="assets/images/Vector.svg" alt="refresh" class="control__refresh-image">
         </button>
         <div class="control__button control__button--language">
+          <div class="control__button control__button--language-en">EN</div>
           <div class="control__button control__button--language-ru">RU</div>
-          EN
           <img src="assets/images/Vector (Stroke).svg" alt="arrow" class="control__arrow-image">
         </div>
-        <button class="control__button control__button--last-button1">F&deg;</button>
-        <button class="control__button control__button--last-button2">C&deg;</button>
+        <button class="control__button control__button--temperature control__button--last-button1">F&deg;</button>
+        <button class="control__button control__button--temperature control__button--last-button2 control__button--active">C&deg;</button>
       </div>
       <div class="search">
         <input type="text" class="search__input" placeholder="Search city">
@@ -31,61 +31,48 @@
   </header>
   <main>
     <div class="wrapper">
-      <div class="whether">
-        <div class="whether__location-and-date">
-          <p class="whether__city">MINSK, BELARUS</p>
-          <p class="whether__date">Mon 28 October 15:15:15</p>
+      <div class="weather">
+        <div class="weather__location-and-date">
+          <p class="weather__city"></p>
+          <p class="weather__date"></p>
         </div>
-        <div class="whether__whether-now">
-          <p class="whether__temperature">10&deg;</p>
-          <div class="whether__whether-description">
-            <img src="assets/images/cloud.svg" alt="cloud" class="whether__image">
-            <div class="whether__text-description">
-              <p>OVERCAST</p>
-              <p>FEELS LIKE: 7&deg;</p>
-              <p>WIND: 2 m/s</p>
-              <p>HUMIDITY: 83%</p>
+        <div class="weather__weather-now">
+          <p class="weather__temperature"></p>
+          <div class="weather__weather-description">
+            <img src="" alt="" class="weather__image">
+            <div class="weather__text-description">
+              <p class="weather__text"></p>
+              <p class="weather__text"></p>
+              <p class="weather__text"></p>
+              <p class="weather__text"></p>
             </div>
           </div>
         </div>
-        <div class="whether__forecast">
-          <div class="whether__day-forecast">
-            <p class="whether__day">MONDAY</p>
-            <span class="whether__forecast-temperature">5&deg;</span>
-            <img src="assets/images/cloud.svg" alt="" class="whether__forecast-image">
+        <div class="weather__forecast">
+          <div class="weather__day-forecast ">
+            <p class="weather__day"></p>
+            <span class="weather__forecast-temperature"></span>
+            <img src="" alt="" class="weather__forecast-image">
           </div>
-          <div class="whether__day-forecast">
-            <p class="whether__day">TUESDAY</p>
-            <span class="whether__forecast-temperature">5&deg;</span>
-            <img src="assets/images/cloud.svg" alt="" class="whether__forecast-image">
+          <div class="weather__day-forecast">
+            <p class="weather__day"></p>
+            <span class="weather__forecast-temperature"></span>
+            <img src="" alt="" class="weather__forecast-image">
           </div>
-          <div class="whether__day-forecast">
-            <p class="whether__day">WEDNESDAY</p>
-            <span class="whether__forecast-temperature">5&deg;</span>
-            <img src="assets/images/cloud.svg" alt="" class="whether__forecast-image">
+          <div class="weather__day-forecast">
+            <p class="weather__day"></p>
+            <span class="weather__forecast-temperature"></span>
+            <img src="" alt="" class="weather__forecast-image">
           </div>
         </div>
       </div>
       <div class="location">
         <div class="location__map" id="map"></div>
-        <p class="location__coordinates">Latitude: 53&deg;54'</p>
-        <p class="location__coordinates">Longitude: 53&deg;45'</p>
+        <p class="location__coordinates location__coordinates--latitude">Latitude: 0&deg;0'</p>
+        <p class="location__coordinates location__coordinates--longitude">Longitude: 0&deg;0'</p>
       </div>
     </div>
   </main>
-  <script>
-    mapboxgl.accessToken = 'pk.eyJ1IjoiZWJjZXMiLCJhIjoiY2tpOG1qdWcyMDczejJzbGJ3d2R5NHA3eCJ9.R9QjuutWo1QLod5AChOpdw';
-    var map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [12.550343, 55.665957],
-      zoom: 8
-    });
-
-    var marker = new mapboxgl.Marker()
-      .setLngLat([12.550343, 55.665957])
-      .addTo(map);
-  </script>
   <script src="script.js"></script>
 </body>
 </html>

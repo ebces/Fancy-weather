@@ -1,15 +1,16 @@
 body {
     margin: 0;
-    background-image: url(assets/images/2.jpg);
+    background-size: cover;
     font-family: sans-serif;
-}
-
-main .wrapper {
-    height: 70vh;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .wrapper {
-    margin: 50px auto 0;
+    background-color: #00000071;
+    margin: 0 auto;
     display: flex;
     width: 95%;
     justify-content: space-between;
@@ -26,11 +27,12 @@ main .wrapper {
 }
 
 .control__arrow-image {
-    width: 30%;
+    width: 20%;
 }
 
 .control__button,
 .search__button {
+    cursor: pointer;
     width: 50px;
     height: 50px;
     margin: 0 10px;
@@ -38,6 +40,11 @@ main .wrapper {
     border: none;
     color: #ffffff;
     background-color: #ffffff54;
+}
+
+.control__button:focus,
+.search__button:focus {
+    outline: none;
 }
 
 .control__button--last-button1 {
@@ -61,8 +68,10 @@ main .wrapper {
     position: relative;
 }
 
-.control__button--language-ru {
+.control__button--language-ru,
+.control__button--language-en {
     position: absolute;
+    width: 100%;
     left: -10px;
     top: 0;
     opacity: 0;
@@ -70,11 +79,20 @@ main .wrapper {
     text-align: center;
 }
 
+.control__button--language-en {
+    opacity: 1;
+}
+
 .control__button--language:hover .control__button--language-ru {
     opacity: 1;
     left: -10px;
     top: 50px;
     width: 100%;
+}
+
+.control__button:hover,
+.control__button--active {
+    background-color: #585858;
 }
 
 .control__arrow-image {
@@ -97,51 +115,51 @@ main .wrapper {
     width: 100px;
 }
 
-.whether {
+.weather {
     width: 50%;
     color: #ffffff;
 }
 
-.whether__city {
+.weather__city {
     font-size: 5vw;
     font-weight: bold;
     margin: 20px 0 0 0;
 }
 
-.whether__date {
+.weather__date {
     font-size: 2vw;
     margin: 0;
 }
 
-.whether__whether-now {
+.weather__weather-now {
     display: flex;
     justify-content: space-around;
 }
 
-.whether__temperature {
+.weather__temperature {
     font-size: 20vw;
     font-weight: bold;
     margin: 0;
 }
 
-.whether__image {
+.weather__image {
     width: 10vw;
 }
 
-.whether__forecast {
+.weather__forecast {
     display: flex;
     justify-content: space-around;
 }
 
-.whether__day {
+.weather__day {
     margin: 0;
 }
 
-.whether__forecast-temperature {
+.weather__forecast-temperature {
     font-size: 5vw;
 }
 
-.whether__forecast-image {
+.weather__forecast-image {
     width: 4vw;
 }
 
@@ -155,7 +173,11 @@ main .wrapper {
     border-radius: 10px;
 }
 
-@media (max-width: 670px) {
+.location__coordinates {
+    margin: 0;
+}
+
+@media (max-width: 630px) {
     .wrapper {
         flex-direction: column;
         align-items: center;
@@ -173,13 +195,16 @@ main .wrapper {
         width: 100%;
     }
 
-    .whether {
+    .weather {
         width: 100%;
+    }
+
+    .weather__temperature {
+        font-size: 30vw;
     }
 
     #map {
         margin-top: 10px;
         width: 100%;
-        height: 50vw;
     }
 }

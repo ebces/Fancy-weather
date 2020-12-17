@@ -112,49 +112,40 @@ const getUserCity = async () => {
   return data.city;
 };
 
-const getNewCityData = async () => {
-  const city = searchField.value.length ? searchField.value : await getUserCity();
-  const response = await fetch(`http://search.maps.sputnik.ru/search?q=${city}`);
-  const data = await response.json();
-
-  return data;
-};
-
-const getNewCoordinates = async () => {
-  const cityData = await getNewCityData();
-
-  return [cityData.result[0].position.lat, cityData.result[0].position.lon];
-};
-
 const getNowWeather = async () => {
-  const cityData = await getNewCityData();
-  const cityName = cityData.result[0].title;
+  const cityName = searchField.value.length ? searchField.value : await getUserCity();
   const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=${language}&appid=489c6e3b9c228bd88ea6333b1a07dfef`);
   const data = await response.json();
 
   return data;
 };
 
-const getCountryNameByCode = async () => {
+const getCountryData = async () => {
   const cityData = await getNowWeather();
-  const countryName = cityData.sys.country;
-  const response = await fetch(`https://restcountries.eu/rest/v2/alpha/${countryName}`);
+  const response = await fetch(`https://htmlweb.ru/geo/api.php?country=${cityData.sys.country}&info&json&api_key=5ac6345ea632dcf4b4f242a291d9194a`);
   const data = await response.json();
 
-  return data.name;
+  return data;
+};
+
+const getNewCoordinates = async () => {
+  const cityData = await getNowWeather();
+
+  return [cityData.coord.lat, cityData.coord.lon];
 };
 
 const getCityNameRu = async () => {
-  const cityData = await getNewCityData();
+  const cityData = await getNowWeather();
+  const countryData = await getCountryData();
 
-  return `${cityData.result[0].title}, ${cityData.result[0].description.split(',')[0]}`;
+  return `${cityData.name}, ${countryData.country.name}`;
 };
 
 const getCityNameEn = async () => {
   const cityData = await getNowWeather();
-  const countryName = await getCountryNameByCode();
+  const countryName = await getCountryData();
 
-  return `${cityData.name}, ${countryName}`;
+  return `${cityData.name}, ${countryName.english}`;
 };
 
 const getForecast = async () => {

@@ -137,6 +137,8 @@ body {
 }
 
 .weather__temperature {
+    display: flex;
+    align-items: center;
     font-size: 20vw;
     font-weight: bold;
     margin: 0;
@@ -197,6 +199,10 @@ body {
 
     .weather {
         width: 100%;
+    }
+
+    .weather__date {
+        font-size: 3vw;
     }
 
     .weather__temperature {

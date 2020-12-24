@@ -21,6 +21,7 @@ const notActiveLanguageButton = document.querySelector('.control__button--not-ac
 
 let language = localStorage.getItem('language') || 'en';
 let timeString;
+let localTimeShift;
 
 const getServicesData = async () => {
   const ipResponse = await fetch('https://ipinfo.io/json?token=eb5b90bb77d46a');
@@ -104,12 +105,15 @@ const monthsNamesRu = {
   11: 'Декабрь',
 };
 
-const getDateString = (daysNames, monthsNames) => {
+const getDateString = (daysNames, monthsNames, timeShift) => {
   const nowDate = new Date();
   const day = nowDate.getDay();
   const date = nowDate.getDate();
   const month = nowDate.getMonth();
-  const time = nowDate.toLocaleTimeString();
+  const millisecondsUTC = nowDate.getTime() - localTimeShift;
+  const newCountryTime = new Date(millisecondsUTC + timeShift * MILLISECONDS_IN_SECOND);
+  const time = newCountryTime.toLocaleTimeString();
+
   const nameOfMonth = monthsNames[month];
   const nameOfday = Array.isArray(daysNames[day]) ? namesOfDaysRu[day][1]
     : namesOfDaysEn[day].slice(0, 3);
@@ -212,30 +216,36 @@ const removeLanguageButton = () => {
 };
 
 const printInformation = async () => {
-  const weatherAndCountryData = await getServicesData();
+  const { weatherData, forecastData, countryData } = await getServicesData();
+
   const activeTemperatureButton = document.querySelector('.control__button--active');
+  if (!localTimeShift) {
+    localTimeShift = weatherData.timezone * MILLISECONDS_IN_SECOND;
+  }
 
   if (language === 'en') {
-    printWeatherAndForecastEn(activeTemperatureButton, weatherAndCountryData.weatherData,
-      weatherAndCountryData.forecastData);
-    printCoordinate('Latitude', 'Longitude', weatherAndCountryData.weatherData);
-    printCity(getCityNameEn, weatherAndCountryData.weatherData, weatherAndCountryData.countryData);
+    printWeatherAndForecastEn(activeTemperatureButton, weatherData,
+      forecastData);
+    printCoordinate('Latitude', 'Longitude', weatherData);
+    printCity(getCityNameEn, weatherData, countryData);
 
+    clearInterval(timeString);
     timeString = setInterval(() => {
-      dateString.textContent = getDateString(namesOfDaysEn, monthsNamesEn);
+      dateString.textContent = getDateString(namesOfDaysRu, monthsNamesRu, weatherData.timezone);
     }, 1000);
   } else {
-    printWeatherAndForecastRu(activeTemperatureButton, weatherAndCountryData.weatherData,
-      weatherAndCountryData.forecastData);
-    printCoordinate('Широта', 'Долгота', weatherAndCountryData.weatherData);
-    printCity(getCityNameRu, weatherAndCountryData.weatherData, weatherAndCountryData.countryData);
+    printWeatherAndForecastRu(activeTemperatureButton, weatherData,
+      forecastData);
+    printCoordinate('Широта', 'Долгота', weatherData);
+    printCity(getCityNameRu, weatherData, countryData);
 
+    clearInterval(timeString);
     timeString = setInterval(() => {
-      dateString.textContent = getDateString(namesOfDaysRu, monthsNamesRu);
+      dateString.textContent = getDateString(namesOfDaysRu, monthsNamesRu, weatherData.timezone);
     }, 1000);
   }
 
-  printMap(weatherAndCountryData.weatherData);
+  printMap(weatherData);
   printNewBackground();
 };
 
@@ -244,7 +254,7 @@ printInformation();
 refreshButton.addEventListener('click', printNewBackground);
 
 const changeTemperature = async (e) => {
-  const weatherAndCountryData = await getServicesData();
+  const { weatherData, forecastData } = await getServicesData();
 
   controlButtonsTemperature.forEach((button) => button.classList.remove('control__button--active'));
   e.target.classList.add('control__button--active');
@@ -254,11 +264,9 @@ const changeTemperature = async (e) => {
   const activeTemperatureButton = document.querySelector('.control__button--active');
 
   if (language === 'en') {
-    printWeatherAndForecastEn(activeTemperatureButton, weatherAndCountryData.weatherData,
-      weatherAndCountryData.forecastData);
+    printWeatherAndForecastEn(activeTemperatureButton, weatherData, forecastData);
   } else {
-    printWeatherAndForecastRu(activeTemperatureButton, weatherAndCountryData.weatherData,
-      weatherAndCountryData.forecastData);
+    printWeatherAndForecastRu(activeTemperatureButton, weatherData, forecastData);
   }
 };
 
@@ -267,39 +275,38 @@ celsiusButton.addEventListener('click', (e) => changeTemperature(e));
 
 notActiveLanguageButton.addEventListener('click', async () => {
   const activeTemperatureButton = document.querySelector('.control__button--active');
-  let weatherAndCountryData;
 
   if (language === 'en') {
     activeLanguageButton.textContent = 'RU';
     notActiveLanguageButton.textContent = 'EN';
     language = 'ru';
 
-    weatherAndCountryData = await getServicesData();
+    const { weatherData, forecastData, countryData } = await getServicesData();
 
-    printWeatherAndForecastRu(activeTemperatureButton, weatherAndCountryData.weatherData,
-      weatherAndCountryData.forecastData);
-    printCoordinate('Широта', 'Долгота', weatherAndCountryData.weatherData);
-    printCity(getCityNameRu, weatherAndCountryData.weatherData, weatherAndCountryData.countryData);
+    printWeatherAndForecastRu(activeTemperatureButton, weatherData,
+      forecastData);
+    printCoordinate('Широта', 'Долгота', weatherData);
+    printCity(getCityNameRu, weatherData, countryData);
 
     clearInterval(timeString);
     timeString = setInterval(() => {
-      dateString.textContent = getDateString(namesOfDaysRu, monthsNamesRu);
+      dateString.textContent = getDateString(namesOfDaysRu, monthsNamesRu, weatherData.timezone);
     }, 1000);
   } else {
     activeLanguageButton.textContent = 'EN';
     notActiveLanguageButton.textContent = 'RU';
     language = 'en';
 
-    weatherAndCountryData = await getServicesData();
+    const { weatherData, forecastData, countryData } = await getServicesData();
 
-    printWeatherAndForecastEn(activeTemperatureButton, weatherAndCountryData.weatherData,
-      weatherAndCountryData.forecastData);
-    printCoordinate('Latitude', 'Longitude', weatherAndCountryData.weatherData);
-    printCity(getCityNameEn, weatherAndCountryData.weatherData, weatherAndCountryData.countryData);
+    printWeatherAndForecastEn(activeTemperatureButton, weatherData,
+      forecastData);
+    printCoordinate('Latitude', 'Longitude', weatherData);
+    printCity(getCityNameEn, weatherData, countryData);
 
     clearInterval(timeString);
     timeString = setInterval(() => {
-      dateString.textContent = getDateString(namesOfDaysEn, monthsNamesEn);
+      dateString.textContent = getDateString(namesOfDaysEn, monthsNamesEn, weatherData.timezone);
     }, 1000);
   }
 

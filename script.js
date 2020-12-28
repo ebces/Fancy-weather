@@ -4,6 +4,7 @@ import {
 
 const urlToPictures = 'https://api.unsplash.com/photos/random?query=morning&client_id=e2077ad31a806c894c460aec8f81bc2af4d09c4f8104ae3177bb809faf0eac17';
 const celsiusBadge = 'C';
+const farenheitBadge = 'F';
 const { body } = document;
 const refreshButton = document.querySelector('.control__button--refresh');
 const controlButtonsTemperature = document.querySelectorAll('.control__button--temperature');
@@ -26,8 +27,13 @@ const activeLanguageButton = document.querySelector('.control__button--active-la
 const notActiveLanguageButton = document.querySelector('.control__button--not-active-language');
 
 let language = localStorage.getItem('language') || 'en';
-let timeString;
+let timeInterval;
 let localTimeShift;
+
+let startDate = new Date().toDateString();
+let day = new Date().getDay();
+let date = new Date().getDate();
+let month = new Date().getMonth();
 
 const getServicesData = async () => {
   let weatherData;
@@ -56,7 +62,7 @@ const getServicesData = async () => {
   return { weatherData, forecastData, countryData };
 };
 
-if (localStorage.getItem('temperature') === 'F') {
+if (localStorage.getItem('temperature') === farenheitBadge) {
   farenheitButton.classList.add('control__button--active');
 } else {
   celsiusButton.classList.add('control__button--active');
@@ -77,13 +83,16 @@ const kelvinToFahrenheit = (kelvin) => `${(((kelvin - 273.15) * 9) / 5 + 32).toF
 
 const getDateString = (daysNames, monthsNames, timeShift) => {
   const nowDate = new Date();
-  const day = nowDate.getDay();
-  const date = nowDate.getDate();
-  const month = nowDate.getMonth();
   const millisecondsUTC = nowDate.getTime() - localTimeShift;
-  const newCountryTime = new Date(millisecondsUTC + timeShift * MILLISECONDS_IN_SECOND);
-  const time = newCountryTime.toLocaleTimeString();
+  const newCountryMilliseconds = new Date(millisecondsUTC + timeShift * MILLISECONDS_IN_SECOND);
+  const time = newCountryMilliseconds.toLocaleTimeString();
 
+  if (startDate !== newCountryMilliseconds.toDateString()) {
+    startDate = newCountryMilliseconds.toDateString();
+    day = newCountryMilliseconds.getDay();
+    date = newCountryMilliseconds.getDate();
+    month = newCountryMilliseconds.getMonth();
+  }
   const nameOfMonth = monthsNames[month];
   const nameOfday = Array.isArray(daysNames[day]) ? namesOfDaysRu[day][1]
     : namesOfDaysEn[day].slice(0, 3);
@@ -198,8 +207,8 @@ const printInformation = async () => {
     printCoordinate(coordinateNames.latitudeEn, coordinateNames.longitudeEn, weatherData);
     printCity(getCityNameEn, weatherData, countryData);
 
-    clearInterval(timeString);
-    timeString = setInterval(() => {
+    clearInterval(timeInterval);
+    timeInterval = setInterval(() => {
       dateString.textContent = getDateString(namesOfDaysEn, monthsNamesEn, weatherData.timezone);
     }, 1000);
   } else {
@@ -208,8 +217,8 @@ const printInformation = async () => {
     printCoordinate(coordinateNames.latitudeRu, coordinateNames.longitudeRu, weatherData);
     printCity(getCityNameRu, weatherData, countryData);
 
-    clearInterval(timeString);
-    timeString = setInterval(() => {
+    clearInterval(timeInterval);
+    timeInterval = setInterval(() => {
       dateString.textContent = getDateString(namesOfDaysRu, monthsNamesRu, weatherData.timezone);
     }, 1000);
   }
@@ -257,8 +266,8 @@ notActiveLanguageButton.addEventListener('click', async () => {
     printCoordinate(coordinateNames.latitudeRu, coordinateNames.longitudeRu, weatherData);
     printCity(getCityNameRu, weatherData, countryData);
 
-    clearInterval(timeString);
-    timeString = setInterval(() => {
+    clearInterval(timeInterval);
+    timeInterval = setInterval(() => {
       dateString.textContent = getDateString(namesOfDaysRu, monthsNamesRu, weatherData.timezone);
     }, 1000);
   } else {
@@ -273,8 +282,8 @@ notActiveLanguageButton.addEventListener('click', async () => {
     printCoordinate(coordinateNames.latitudeEn, coordinateNames.longitudeEn, weatherData);
     printCity(getCityNameEn, weatherData, countryData);
 
-    clearInterval(timeString);
-    timeString = setInterval(() => {
+    clearInterval(timeInterval);
+    timeInterval = setInterval(() => {
       dateString.textContent = getDateString(namesOfDaysEn, monthsNamesEn, weatherData.timezone);
     }, 1000);
   }

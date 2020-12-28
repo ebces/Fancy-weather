@@ -228,6 +228,7 @@ body {
 
     .weather__text-description {
         font-size: 4vw;
+        text-transform: uppercase;
     }
 
     .weather__weather-description {

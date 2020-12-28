@@ -1,3 +1,9 @@
+import {
+  namesOfDaysEn, monthsNamesEn, namesOfDaysRu, monthsNamesRu, coordinateNames,
+} from './translatedNames';
+
+const urlToPictures = 'https://api.unsplash.com/photos/random?query=morning&client_id=e2077ad31a806c894c460aec8f81bc2af4d09c4f8104ae3177bb809faf0eac17';
+const celsiusBadge = 'C';
 const { body } = document;
 const refreshButton = document.querySelector('.control__button--refresh');
 const controlButtonsTemperature = document.querySelectorAll('.control__button--temperature');
@@ -69,56 +75,6 @@ const MILLISECONDS_IN_SECOND = 1000;
 const kelvinToCelsius = (kelvin) => `${(kelvin - 273.15).toFixed()}&deg;C`;
 const kelvinToFahrenheit = (kelvin) => `${(((kelvin - 273.15) * 9) / 5 + 32).toFixed()}&deg;F`;
 
-const namesOfDaysEn = {
-  0: 'Sunday',
-  1: 'Monday',
-  2: 'Tuesday',
-  3: 'Wednesday',
-  4: 'Thursday',
-  5: 'Friday',
-  6: 'Saturday',
-};
-
-const namesOfDaysRu = {
-  0: ['Воскресенье', 'Вс'],
-  1: ['Понедельник', 'Пн'],
-  2: ['Вторник', 'Вт'],
-  3: ['Среда', 'Ср'],
-  4: ['Четверг', 'Чт'],
-  5: ['Пятница', 'Пт'],
-  6: ['Суббота', 'Сб'],
-};
-
-const monthsNamesEn = {
-  0: 'January',
-  1: 'February',
-  2: 'March',
-  3: 'April',
-  4: 'May',
-  5: 'June',
-  6: 'July',
-  7: 'August',
-  8: 'September',
-  9: 'October',
-  10: 'November',
-  11: 'December',
-};
-
-const monthsNamesRu = {
-  0: 'Январь',
-  1: 'Февраль',
-  2: 'Март',
-  3: 'Апрель',
-  4: 'Май',
-  5: 'Июнь',
-  6: 'Июль',
-  7: 'Август',
-  8: 'Сентябрь',
-  9: 'Октябрь',
-  10: 'Ноябрь',
-  11: 'Декабрь',
-};
-
 const getDateString = (daysNames, monthsNames, timeShift) => {
   const nowDate = new Date();
   const day = nowDate.getDay();
@@ -136,8 +92,7 @@ const getDateString = (daysNames, monthsNames, timeShift) => {
 };
 
 const getLinkToImage = async () => {
-  const url = 'https://api.unsplash.com/photos/random?query=morning&client_id=e2077ad31a806c894c460aec8f81bc2af4d09c4f8104ae3177bb809faf0eac17';
-  const response = await fetch(url);
+  const response = await fetch(urlToPictures);
   const data = await response.json();
 
   return data.urls.regular;
@@ -169,21 +124,21 @@ const printForecast = (temperatureFunc, daysNames, forecastObject) => {
 };
 
 const printWeatherAndForecastEn = (activeTemperatureButton, weatherObject, forecastObject) => {
-  if (activeTemperatureButton.textContent[0] === 'C') {
-    printNowWeather(kelvinToCelsius, 'FEELS LIKE', 'WIND', 'm/s', 'HUMIDITY', weatherObject);
+  if (activeTemperatureButton.textContent[0] === celsiusBadge) {
+    printNowWeather(kelvinToCelsius, 'feels like', 'wind', 'm/s', 'humidity', weatherObject);
     printForecast(kelvinToCelsius, namesOfDaysEn, forecastObject);
   } else {
-    printNowWeather(kelvinToFahrenheit, 'FEELS LIKE', 'WIND', 'm/s', 'HUMIDITY', weatherObject);
+    printNowWeather(kelvinToFahrenheit, 'feels like', 'wind', 'm/s', 'humidity', weatherObject);
     printForecast(kelvinToFahrenheit, namesOfDaysEn, forecastObject);
   }
 };
 
 const printWeatherAndForecastRu = (activeTemperatureButton, weatherObject, forecastObject) => {
-  if (activeTemperatureButton.textContent[0] === 'C') {
-    printNowWeather(kelvinToCelsius, 'ОЩУЩАЕТСЯ', 'ВЕТЕР', 'м/с', 'ВЛАЖНОСТЬ', weatherObject);
+  if (activeTemperatureButton.textContent[0] === celsiusBadge) {
+    printNowWeather(kelvinToCelsius, 'ощущается', 'ветер', 'м/с', 'влажность', weatherObject);
     printForecast(kelvinToCelsius, namesOfDaysRu, forecastObject);
   } else {
-    printNowWeather(kelvinToFahrenheit, 'ОЩУЩАЕТСЯ', 'ВЕТЕР', 'м/с', 'ВЛАЖНОСТЬ', weatherObject);
+    printNowWeather(kelvinToFahrenheit, 'ощущается', 'ветер', 'м/с', 'влажность', weatherObject);
     printForecast(kelvinToFahrenheit, namesOfDaysRu, forecastObject);
   }
 };
@@ -240,7 +195,7 @@ const printInformation = async () => {
   if (language === 'en') {
     printWeatherAndForecastEn(activeTemperatureButton, weatherData,
       forecastData);
-    printCoordinate('Latitude', 'Longitude', weatherData);
+    printCoordinate(coordinateNames.latitudeEn, coordinateNames.longitudeEn, weatherData);
     printCity(getCityNameEn, weatherData, countryData);
 
     clearInterval(timeString);
@@ -250,7 +205,7 @@ const printInformation = async () => {
   } else {
     printWeatherAndForecastRu(activeTemperatureButton, weatherData,
       forecastData);
-    printCoordinate('Широта', 'Долгота', weatherData);
+    printCoordinate(coordinateNames.latitudeRu, coordinateNames.longitudeRu, weatherData);
     printCity(getCityNameRu, weatherData, countryData);
 
     clearInterval(timeString);
@@ -299,7 +254,7 @@ notActiveLanguageButton.addEventListener('click', async () => {
 
     printWeatherAndForecastRu(activeTemperatureButton, weatherData,
       forecastData);
-    printCoordinate('Широта', 'Долгота', weatherData);
+    printCoordinate(coordinateNames.latitudeRu, coordinateNames.longitudeRu, weatherData);
     printCity(getCityNameRu, weatherData, countryData);
 
     clearInterval(timeString);
@@ -315,7 +270,7 @@ notActiveLanguageButton.addEventListener('click', async () => {
 
     printWeatherAndForecastEn(activeTemperatureButton, weatherData,
       forecastData);
-    printCoordinate('Latitude', 'Longitude', weatherData);
+    printCoordinate(coordinateNames.latitudeEn, coordinateNames.longitudeEn, weatherData);
     printCity(getCityNameEn, weatherData, countryData);
 
     clearInterval(timeString);

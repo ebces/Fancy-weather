@@ -1,5 +1,6 @@
 import {
-  namesOfDaysEn, monthsNamesEn, namesOfDaysRu, monthsNamesRu, coordinateNames, weatherDescriptionRu, weatherDescriptionEn,
+  namesOfDaysEn, monthsNamesEn, namesOfDaysRu, monthsNamesRu,
+  coordinateNames, weatherDescriptionRu, weatherDescriptionEn,
 } from './translatedNames';
 
 const urlToPictures = 'https://api.unsplash.com/photos/random?query=morning&client_id=e2077ad31a806c894c460aec8f81bc2af4d09c4f8104ae3177bb809faf0eac17';

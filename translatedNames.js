@@ -63,7 +63,6 @@ export const weatherDescriptionRu = {
 };
 
 export const weatherDescriptionEn = {
-
   feelsStr: 'feels like',
   windStr: 'wind',
   windSpeedStr: 'm/s',

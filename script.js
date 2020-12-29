@@ -24,9 +24,10 @@ const searchButton = document.querySelector('.search__button');
 const cityAndCountry = document.querySelector('.weather__city');
 const languageButtons = document.querySelector('.control__button--languages');
 const activeLanguageButton = document.querySelector('.control__button--active-language');
-const notActiveLanguageButton = document.querySelector('.control__button--not-active-language');
+const notActiveLanguageButtons = document.querySelectorAll('.control__button--not-active-language');
 
-let language = localStorage.getItem('language') || 'en';
+const languages = ['EN', 'RU'];
+let language = localStorage.getItem('language') || languages[0];
 let timeInterval;
 let localTimeShift;
 
@@ -68,13 +69,16 @@ if (localStorage.getItem('temperature') === farenheitBadge) {
   celsiusButton.classList.add('control__button--active');
 }
 
-if (language === 'en') {
-  activeLanguageButton.textContent = 'EN';
-  notActiveLanguageButton.textContent = 'RU';
-} else {
-  activeLanguageButton.textContent = 'RU';
-  notActiveLanguageButton.textContent = 'EN';
-}
+const changeLanguage = () => {
+  activeLanguageButton.textContent = language;
+  const restLanguages = languages.filter((elem) => elem !== language);
+
+  for (let i = 0; i < notActiveLanguageButtons.length; i += 1) {
+    notActiveLanguageButtons[i].textContent = restLanguages[i];
+  }
+};
+
+changeLanguage();
 
 const MILLISECONDS_IN_SECOND = 1000;
 
@@ -186,11 +190,13 @@ const printNewBackground = async () => {
   body.style.backgroundImage = `url(${backgroundLink})`;
 };
 
-const removeLanguageButton = () => {
-  notActiveLanguageButton.remove();
-  setTimeout(() => {
-    languageButtons.append(notActiveLanguageButton);
-  }, 0);
+const removeLanguageButtons = () => {
+  notActiveLanguageButtons.forEach((button) => {
+    button.remove();
+    setTimeout(() => {
+      languageButtons.append(button);
+    }, 0);
+  });
 };
 
 const printInformation = async () => {
@@ -201,7 +207,7 @@ const printInformation = async () => {
     localTimeShift = weatherData.timezone * MILLISECONDS_IN_SECOND;
   }
 
-  if (language === 'en') {
+  if (language === 'EN') {
     printWeatherAndForecastEn(activeTemperatureButton, weatherData,
       forecastData);
     printCoordinate(coordinateNames.latitudeEn, coordinateNames.longitudeEn, weatherData);
@@ -241,7 +247,7 @@ const changeTemperature = async (e) => {
 
   const activeTemperatureButton = document.querySelector('.control__button--active');
 
-  if (language === 'en') {
+  if (language === 'EN') {
     printWeatherAndForecastEn(activeTemperatureButton, weatherData, forecastData);
   } else {
     printWeatherAndForecastRu(activeTemperatureButton, weatherData, forecastData);
@@ -251,45 +257,41 @@ const changeTemperature = async (e) => {
 farenheitButton.addEventListener('click', (e) => changeTemperature(e));
 celsiusButton.addEventListener('click', (e) => changeTemperature(e));
 
-notActiveLanguageButton.addEventListener('click', async () => {
-  const activeTemperatureButton = document.querySelector('.control__button--active');
+notActiveLanguageButtons.forEach((elem) => {
+  elem.addEventListener('click', async () => {
+    const activeTemperatureButton = document.querySelector('.control__button--active');
 
-  if (language === 'en') {
-    activeLanguageButton.textContent = 'RU';
-    notActiveLanguageButton.textContent = 'EN';
-    language = 'ru';
+    language = elem.textContent;
+    if (language === 'RU') {
+      const { weatherData, forecastData, countryData } = await getServicesData();
 
-    const { weatherData, forecastData, countryData } = await getServicesData();
+      printWeatherAndForecastRu(activeTemperatureButton, weatherData,
+        forecastData);
+      printCoordinate(coordinateNames.latitudeRu, coordinateNames.longitudeRu, weatherData);
+      printCity(getCityNameRu, weatherData, countryData);
 
-    printWeatherAndForecastRu(activeTemperatureButton, weatherData,
-      forecastData);
-    printCoordinate(coordinateNames.latitudeRu, coordinateNames.longitudeRu, weatherData);
-    printCity(getCityNameRu, weatherData, countryData);
+      clearInterval(timeInterval);
+      timeInterval = setInterval(() => {
+        dateString.textContent = getDateString(namesOfDaysRu, monthsNamesRu, weatherData.timezone);
+      }, 1000);
+    } else {
+      const { weatherData, forecastData, countryData } = await getServicesData();
 
-    clearInterval(timeInterval);
-    timeInterval = setInterval(() => {
-      dateString.textContent = getDateString(namesOfDaysRu, monthsNamesRu, weatherData.timezone);
-    }, 1000);
-  } else {
-    activeLanguageButton.textContent = 'EN';
-    notActiveLanguageButton.textContent = 'RU';
-    language = 'en';
+      printWeatherAndForecastEn(activeTemperatureButton, weatherData,
+        forecastData);
+      printCoordinate(coordinateNames.latitudeEn, coordinateNames.longitudeEn, weatherData);
+      printCity(getCityNameEn, weatherData, countryData);
 
-    const { weatherData, forecastData, countryData } = await getServicesData();
+      clearInterval(timeInterval);
+      timeInterval = setInterval(() => {
+        dateString.textContent = getDateString(namesOfDaysEn, monthsNamesEn, weatherData.timezone);
+      }, 1000);
+    }
+    changeLanguage();
 
-    printWeatherAndForecastEn(activeTemperatureButton, weatherData,
-      forecastData);
-    printCoordinate(coordinateNames.latitudeEn, coordinateNames.longitudeEn, weatherData);
-    printCity(getCityNameEn, weatherData, countryData);
-
-    clearInterval(timeInterval);
-    timeInterval = setInterval(() => {
-      dateString.textContent = getDateString(namesOfDaysEn, monthsNamesEn, weatherData.timezone);
-    }, 1000);
-  }
-
-  localStorage.setItem('language', language);
-  removeLanguageButton();
+    localStorage.setItem('language', language);
+    removeLanguageButtons();
+  });
 });
 
 searchButton.addEventListener('click', () => {

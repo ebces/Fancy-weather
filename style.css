@@ -196,6 +196,10 @@ body {
     width: 160px;
 }
 
+.weather__text-description {
+    text-transform: uppercase;
+}
+
 @media (max-width: 700px) {
     .wrapper {
         flex-direction: column;
@@ -228,7 +232,6 @@ body {
 
     .weather__text-description {
         font-size: 4vw;
-        text-transform: uppercase;
     }
 
     .weather__weather-description {

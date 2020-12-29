@@ -54,3 +54,18 @@ export const coordinateNames = {
   longitudeRu: 'Долгота',
   longitudeEn: 'Longitude',
 };
+
+export const weatherDescriptionRu = {
+  feelsStr: 'ощущается',
+  windStr: 'ветер',
+  windSpeedStr: 'м/с',
+  humidityStr: 'влажность',
+};
+
+export const weatherDescriptionEn = {
+
+  feelsStr: 'feels like',
+  windStr: 'wind',
+  windSpeedStr: 'm/s',
+  humidityStr: 'humidity',
+};

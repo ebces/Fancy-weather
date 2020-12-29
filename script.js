@@ -1,5 +1,5 @@
 import {
-  namesOfDaysEn, monthsNamesEn, namesOfDaysRu, monthsNamesRu, coordinateNames,
+  namesOfDaysEn, monthsNamesEn, namesOfDaysRu, monthsNamesRu, coordinateNames, weatherDescriptionRu, weatherDescriptionEn,
 } from './translatedNames';
 
 const urlToPictures = 'https://api.unsplash.com/photos/random?query=morning&client_id=e2077ad31a806c894c460aec8f81bc2af4d09c4f8104ae3177bb809faf0eac17';
@@ -115,7 +115,10 @@ const getCityNameRu = ({ name }, { country }) => (country ? `${name}, ${country.
 
 const getCityNameEn = ({ name }, { english }) => (english ? `${name}, ${english}` : name);
 
-const printNowWeather = (tempFunc, feelsStr, windStr, windSpeedStr, humidityStr, weatherObject) => {
+const printNowWeather = (tempFunc, weatherDescription, weatherObject) => {
+  const {
+    feelsStr, windStr, windSpeedStr, humidityStr,
+  } = weatherDescription;
   const [weatherType, weatherFeels, weatherWind, weatherHumidity] = weatherDescriptions;
   weatherType.textContent = weatherObject.weather[0].description.toUpperCase();
   weatherFeels.innerHTML = `${feelsStr}: ${tempFunc(weatherObject.main.feels_like)}`;
@@ -138,20 +141,20 @@ const printForecast = (temperatureFunc, daysNames, forecastObject) => {
 
 const printWeatherAndForecastEn = (activeTemperatureButton, weatherObject, forecastObject) => {
   if (activeTemperatureButton.textContent[0] === celsiusBadge) {
-    printNowWeather(kelvinToCelsius, 'feels like', 'wind', 'm/s', 'humidity', weatherObject);
+    printNowWeather(kelvinToCelsius, weatherDescriptionEn, weatherObject);
     printForecast(kelvinToCelsius, namesOfDaysEn, forecastObject);
   } else {
-    printNowWeather(kelvinToFahrenheit, 'feels like', 'wind', 'm/s', 'humidity', weatherObject);
+    printNowWeather(kelvinToFahrenheit, weatherDescriptionEn, weatherObject);
     printForecast(kelvinToFahrenheit, namesOfDaysEn, forecastObject);
   }
 };
 
 const printWeatherAndForecastRu = (activeTemperatureButton, weatherObject, forecastObject) => {
   if (activeTemperatureButton.textContent[0] === celsiusBadge) {
-    printNowWeather(kelvinToCelsius, 'ощущается', 'ветер', 'м/с', 'влажность', weatherObject);
+    printNowWeather(kelvinToCelsius, weatherDescriptionRu, weatherObject);
     printForecast(kelvinToCelsius, namesOfDaysRu, forecastObject);
   } else {
-    printNowWeather(kelvinToFahrenheit, 'ощущается', 'ветер', 'м/с', 'влажность', weatherObject);
+    printNowWeather(kelvinToFahrenheit, weatherDescriptionRu, weatherObject);
     printForecast(kelvinToFahrenheit, namesOfDaysRu, forecastObject);
   }
 };

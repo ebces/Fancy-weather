@@ -111,9 +111,9 @@ const getLinkToImage = async () => {
   return data.urls.regular;
 };
 
-const getCityNameRu = (weatherObject, countryObject) => `${weatherObject.name}, ${countryObject.country.name}`;
+const getCityNameRu = ({ name }, { country }) => (country ? `${name}, ${country.name}` : name);
 
-const getCityNameEn = (weatherObject, countryObject) => `${weatherObject.name}, ${countryObject.english}`;
+const getCityNameEn = ({ name }, { english }) => (english ? `${name}, ${english}` : name);
 
 const printNowWeather = (tempFunc, feelsStr, windStr, windSpeedStr, humidityStr, weatherObject) => {
   const [weatherType, weatherFeels, weatherWind, weatherHumidity] = weatherDescriptions;

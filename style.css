@@ -15,7 +15,7 @@ body {
     width: 95%;
     justify-content: space-between;
     align-items: center;
-    padding: 5px;
+    padding: 10px 5px;
 }
 
 .control {
@@ -180,7 +180,7 @@ body {
 
 #map {
     width: 35vw;
-    height: 35vw;
+    height: 34vw;
     border-radius: 10px;
 }
 

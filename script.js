@@ -83,8 +83,17 @@ changeLanguage();
 
 const MILLISECONDS_IN_SECOND = 1000;
 
-const kelvinToCelsius = (kelvin) => `${(kelvin - 273.15).toFixed()}&deg;C`;
-const kelvinToFahrenheit = (kelvin) => `${(((kelvin - 273.15) * 9) / 5 + 32).toFixed()}&deg;F`;
+const kelvinToCelsius = (kelvin) => {
+  const temp = Math.trunc(kelvin - 273.15);
+
+  return Math.abs(temp) ? `${temp}&deg;C` : '0&deg;C';
+};
+
+const kelvinToFahrenheit = (kelvin) => {
+  const temp = Math.trunc(((kelvin - 273.15) * 9) / 5 + 32);
+
+  return Math.abs(temp) ? `${temp}&deg;F` : '0&deg;F';
+};
 
 const getDateString = (timeShift) => {
   const nowDate = new Date();

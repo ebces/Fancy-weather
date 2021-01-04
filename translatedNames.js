@@ -68,3 +68,10 @@ export const weatherDescriptionEn = {
   windSpeedStr: 'm/s',
   humidityStr: 'humidity',
 };
+
+export const searchAreaNames = {
+  searchEn: 'Search',
+  searchRu: 'Поиск',
+  placeHolderEn: 'Search city',
+  placeHolderRu: 'Введите город',
+};

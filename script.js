@@ -59,6 +59,7 @@ const getServicesData = async () => {
     countryData = await countryResponse.json();
   } catch (e) {
     alert(e);
+    searchField.value = '';
   }
 
   return { weatherData, forecastData, countryData };

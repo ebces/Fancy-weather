@@ -86,11 +86,26 @@ const MILLISECONDS_IN_SECOND = 1000;
 const kelvinToCelsius = (kelvin) => `${(kelvin - 273.15).toFixed()}&deg;C`;
 const kelvinToFahrenheit = (kelvin) => `${(((kelvin - 273.15) * 9) / 5 + 32).toFixed()}&deg;F`;
 
-const getDateString = (daysNames, monthsNames, timeShift) => {
+const getDateString = (timeShift) => {
   const nowDate = new Date();
   const millisecondsUTC = nowDate.getTime() - localTimeShift;
   const newCountryMilliseconds = new Date(millisecondsUTC + timeShift * MILLISECONDS_IN_SECOND);
   const time = newCountryMilliseconds.toLocaleTimeString();
+
+  let nameOfMonth;
+  let nameOfday;
+
+  switch (language) {
+    case 'EN':
+      nameOfMonth = monthsNamesEn[month];
+      nameOfday = namesOfDaysEn[day].slice(0, 3);
+      break;
+    case 'RU':
+      nameOfMonth = monthsNamesRu[month];
+      [, nameOfday] = namesOfDaysRu[day];
+      break;
+    default:
+  }
 
   if (startDate !== newCountryMilliseconds.toDateString()) {
     startDate = newCountryMilliseconds.toDateString();
@@ -98,9 +113,6 @@ const getDateString = (daysNames, monthsNames, timeShift) => {
     date = newCountryMilliseconds.getDate();
     month = newCountryMilliseconds.getMonth();
   }
-  const nameOfMonth = monthsNames[month];
-  const nameOfday = Array.isArray(daysNames[day]) ? namesOfDaysRu[day][1]
-    : namesOfDaysEn[day].slice(0, 3);
 
   return `${nameOfday} ${date} ${nameOfMonth} ${time}`;
 };
@@ -112,9 +124,20 @@ const getLinkToImage = async () => {
   return data.urls.regular;
 };
 
-const getCityNameRu = ({ name }, { country }) => (country ? `${name}, ${country.name}` : name);
+const getCityName = ({ name }, { country }) => {
+  let cityName;
+  switch (language) {
+    case 'EN':
+      cityName = country ? `${name}, ${country.english}` : name;
+      break;
+    case 'RU':
+      cityName = country ? `${name}, ${country.name}` : name;
+      break;
+    default:
+  }
 
-const getCityNameEn = ({ name }, { english }) => (english ? `${name}, ${english}` : name);
+  return cityName;
+};
 
 const printNowWeather = (tempFunc, weatherDescription, weatherObject) => {
   const {
@@ -140,41 +163,52 @@ const printForecast = (temperatureFunc, daysNames, forecastObject) => {
   }
 };
 
-const printWeatherAndForecastEn = (activeTemperatureButton, weatherObject, forecastObject) => {
-  if (activeTemperatureButton.textContent[0] === celsiusBadge) {
-    printNowWeather(kelvinToCelsius, weatherDescriptionEn, weatherObject);
-    printForecast(kelvinToCelsius, namesOfDaysEn, forecastObject);
+const chooseTemp = (temperature, weatherDescription, namesOfDays, weatherAndForecastData) => {
+  const { weatherData, forecastData } = weatherAndForecastData;
+
+  if (temperature.textContent[0] === celsiusBadge) {
+    printNowWeather(kelvinToCelsius, weatherDescription, weatherData);
+    printForecast(kelvinToCelsius, namesOfDays, forecastData);
   } else {
-    printNowWeather(kelvinToFahrenheit, weatherDescriptionEn, weatherObject);
-    printForecast(kelvinToFahrenheit, namesOfDaysEn, forecastObject);
+    printNowWeather(kelvinToFahrenheit, weatherDescription, weatherData);
+    printForecast(kelvinToFahrenheit, namesOfDays, forecastData);
   }
 };
 
-const printWeatherAndForecastRu = (activeTemperatureButton, weatherObject, forecastObject) => {
-  if (activeTemperatureButton.textContent[0] === celsiusBadge) {
-    printNowWeather(kelvinToCelsius, weatherDescriptionRu, weatherObject);
-    printForecast(kelvinToCelsius, namesOfDaysRu, forecastObject);
-  } else {
-    printNowWeather(kelvinToFahrenheit, weatherDescriptionRu, weatherObject);
-    printForecast(kelvinToFahrenheit, namesOfDaysRu, forecastObject);
+const printWeatherAndForecast = (temperature, weatherData) => {
+  switch (language) {
+    case 'EN':
+      chooseTemp(temperature, weatherDescriptionEn, namesOfDaysEn, weatherData);
+      break;
+    case 'RU':
+      chooseTemp(temperature, weatherDescriptionRu, namesOfDaysRu, weatherData);
+      break;
+    default:
   }
 };
 
-const printCoordinate = (latitudeStr, longitudeStr, weatherObject) => {
+const printCoordinate = (weatherObject) => {
   const { lat: firstCoordinate, lon: secondCoordinate } = weatherObject.coord;
   const firstCoordinateDegree = Number(firstCoordinate).toFixed();
   const firstCoordinateMinutes = String(firstCoordinate).split('.')[1].slice(0, 2);
   const secondCoordinateDegree = Number(secondCoordinate).toFixed();
   const secondCoordinateMinutes = String(secondCoordinate).split('.')[1].slice(0, 2);
 
-  latitude.innerHTML = `${latitudeStr}: ${secondCoordinateDegree}&deg;${secondCoordinateMinutes}'`;
-  longitude.innerHTML = `${longitudeStr}: ${firstCoordinateDegree}&deg;${firstCoordinateMinutes}'`;
+  switch (language) {
+    case 'EN':
+      latitude.innerHTML = `${coordinateNames.latitudeEn}: ${secondCoordinateDegree}&deg;${secondCoordinateMinutes}'`;
+      longitude.innerHTML = `${coordinateNames.longitudeEn}: ${firstCoordinateDegree}&deg;${firstCoordinateMinutes}'`;
+      break;
+    case 'RU':
+      latitude.innerHTML = `${coordinateNames.latitudeRu}: ${secondCoordinateDegree}&deg;${secondCoordinateMinutes}'`;
+      longitude.innerHTML = `${coordinateNames.longitudeRu}: ${firstCoordinateDegree}&deg;${firstCoordinateMinutes}'`;
+      break;
+    default:
+  }
 };
 
-const printCity = (cityNameFunc, weatherObject, countryObject) => {
-  const city = cityNameFunc(weatherObject, countryObject);
-
-  cityAndCountry.textContent = city;
+const printCity = (weatherObject, countryObject) => {
+  cityAndCountry.textContent = getCityName(weatherObject, countryObject);
 };
 
 const printMap = (weatherObject) => {
@@ -205,33 +239,22 @@ const removeLanguageButtons = () => {
 
 const printInformation = async () => {
   const { weatherData, forecastData, countryData } = await getServicesData();
+  const weatherAndForecastData = { weatherData, forecastData };
 
   const activeTemperatureButton = document.querySelector('.control__button--active');
+
   if (!localTimeShift) {
     localTimeShift = weatherData.timezone * MILLISECONDS_IN_SECOND;
   }
 
-  if (language === 'EN') {
-    printWeatherAndForecastEn(activeTemperatureButton, weatherData,
-      forecastData);
-    printCoordinate(coordinateNames.latitudeEn, coordinateNames.longitudeEn, weatherData);
-    printCity(getCityNameEn, weatherData, countryData);
+  printWeatherAndForecast(activeTemperatureButton, weatherAndForecastData);
+  printCoordinate(weatherData);
+  printCity(weatherData, countryData);
 
-    clearInterval(timeInterval);
-    timeInterval = setInterval(() => {
-      dateString.textContent = getDateString(namesOfDaysEn, monthsNamesEn, weatherData.timezone);
-    }, 1000);
-  } else {
-    printWeatherAndForecastRu(activeTemperatureButton, weatherData,
-      forecastData);
-    printCoordinate(coordinateNames.latitudeRu, coordinateNames.longitudeRu, weatherData);
-    printCity(getCityNameRu, weatherData, countryData);
-
-    clearInterval(timeInterval);
-    timeInterval = setInterval(() => {
-      dateString.textContent = getDateString(namesOfDaysRu, monthsNamesRu, weatherData.timezone);
-    }, 1000);
-  }
+  clearInterval(timeInterval);
+  timeInterval = setInterval(() => {
+    dateString.textContent = getDateString(weatherData.timezone);
+  }, 1000);
 
   printMap(weatherData);
   printNewBackground();
@@ -243,6 +266,7 @@ refreshButton.addEventListener('click', printNewBackground);
 
 const changeTemperature = async (e) => {
   const { weatherData, forecastData } = await getServicesData();
+  const weatherAndForecastData = { weatherData, forecastData };
 
   controlButtonsTemperature.forEach((button) => button.classList.remove('control__button--active'));
   e.target.classList.add('control__button--active');
@@ -250,12 +274,7 @@ const changeTemperature = async (e) => {
   localStorage.setItem('temperature', e.target.textContent[0]);
 
   const activeTemperatureButton = document.querySelector('.control__button--active');
-
-  if (language === 'EN') {
-    printWeatherAndForecastEn(activeTemperatureButton, weatherData, forecastData);
-  } else {
-    printWeatherAndForecastRu(activeTemperatureButton, weatherData, forecastData);
-  }
+  printWeatherAndForecast(activeTemperatureButton, weatherAndForecastData);
 };
 
 farenheitButton.addEventListener('click', (e) => changeTemperature(e));
@@ -266,31 +285,19 @@ notActiveLanguageButtons.forEach((elem) => {
     const activeTemperatureButton = document.querySelector('.control__button--active');
 
     language = elem.textContent;
-    if (language === 'RU') {
-      const { weatherData, forecastData, countryData } = await getServicesData();
 
-      printWeatherAndForecastRu(activeTemperatureButton, weatherData,
-        forecastData);
-      printCoordinate(coordinateNames.latitudeRu, coordinateNames.longitudeRu, weatherData);
-      printCity(getCityNameRu, weatherData, countryData);
+    const { weatherData, forecastData, countryData } = await getServicesData();
+    const weatherAndForecastData = { weatherData, forecastData };
 
-      clearInterval(timeInterval);
-      timeInterval = setInterval(() => {
-        dateString.textContent = getDateString(namesOfDaysRu, monthsNamesRu, weatherData.timezone);
-      }, 1000);
-    } else {
-      const { weatherData, forecastData, countryData } = await getServicesData();
+    printWeatherAndForecast(activeTemperatureButton, weatherAndForecastData);
+    printCoordinate(weatherData);
+    printCity(weatherData, countryData);
 
-      printWeatherAndForecastEn(activeTemperatureButton, weatherData,
-        forecastData);
-      printCoordinate(coordinateNames.latitudeEn, coordinateNames.longitudeEn, weatherData);
-      printCity(getCityNameEn, weatherData, countryData);
+    clearInterval(timeInterval);
+    timeInterval = setInterval(() => {
+      dateString.textContent = getDateString(weatherData.timezone);
+    }, 1000);
 
-      clearInterval(timeInterval);
-      timeInterval = setInterval(() => {
-        dateString.textContent = getDateString(namesOfDaysEn, monthsNamesEn, weatherData.timezone);
-      }, 1000);
-    }
     changeLanguage();
 
     localStorage.setItem('language', language);

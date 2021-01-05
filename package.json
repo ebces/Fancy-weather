@@ -20,6 +20,7 @@
     "@babel/core": "^7.12.10",
     "babel-loader": "^8.2.2",
     "css-loader": "^5.0.1",
+    "dotenv-webpack": "^6.0.0",
     "html-webpack-plugin": "^4.5.0",
     "style-loader": "^2.0.0",
     "svg-inline-loader": "^0.8.2",

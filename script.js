@@ -44,19 +44,19 @@ const getServicesData = async () => {
   let countryData;
 
   try {
-    const ipResponse = await fetch('https://ipinfo.io/json?token=eb5b90bb77d46a');
+    const ipResponse = await fetch(`https://ipinfo.io/json?token=${process.env.IP_INFO_KEY}`);
     const ipData = await ipResponse.json();
     const cityName = searchField.value.length ? searchField.value : ipData.city;
-    const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=${language}&appid=489c6e3b9c228bd88ea6333b1a07dfef`);
+    const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=${language}&appid=${process.env.OPEN_WEATHER_KEY}`);
     weatherData = await weatherResponse.json();
 
     if (weatherData.cod === '404') {
       throw weatherData.message;
     }
 
-    const forecastResponse = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${weatherData.coord.lat}&lon=${weatherData.coord.lon}&exclude={part}&appid=489c6e3b9c228bd88ea6333b1a07dfef`);
+    const forecastResponse = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${weatherData.coord.lat}&lon=${weatherData.coord.lon}&exclude={part}&appid=${process.env.OPEN_WEATHER_KEY}`);
     forecastData = await forecastResponse.json();
-    const countryResponse = await fetch(`https://htmlweb.ru/geo/api.php?country=${weatherData.sys.country}&info&json&api_key=5ac6345ea632dcf4b4f242a291d9194a`);
+    const countryResponse = await fetch(`https://htmlweb.ru/geo/api.php?country=${weatherData.sys.country}&info&json&api_key=${process.env.HTML_WEB_KEY}`);
     countryData = await countryResponse.json();
   } catch (e) {
     alert(e);

@@ -1,77 +1,122 @@
-export const namesOfDaysEn = {
-  0: 'Sunday',
-  1: 'Monday',
-  2: 'Tuesday',
-  3: 'Wednesday',
-  4: 'Thursday',
-  5: 'Friday',
-  6: 'Saturday',
+export const namesOfDays = {
+  0: {
+    ru: ['Воскресенье', 'Вс'],
+    en: ['Sunday', 'Sun'],
+  },
+  1: {
+    ru: ['Понедельник', 'Пн'],
+    en: ['Monday', 'Mon'],
+  },
+  2: {
+    ru: ['Вторник', 'Вт'],
+    en: ['Tuesday', 'Tue'],
+  },
+  3: {
+    ru: ['Среда', 'Ср'],
+    en: ['Wednesday', 'Wed'],
+  },
+  4: {
+    ru: ['Четверг', 'Чт'],
+    en: ['Thursday', 'Thu'],
+  },
+  5: {
+    ru: ['Пятница', 'Пт'],
+    en: ['Friday', 'Fri'],
+  },
+  6: {
+    ru: ['Суббота', 'Сб'],
+    en: ['Saturday', 'Sat'],
+  },
 };
 
-export const namesOfDaysRu = {
-  0: ['Воскресенье', 'Вс'],
-  1: ['Понедельник', 'Пн'],
-  2: ['Вторник', 'Вт'],
-  3: ['Среда', 'Ср'],
-  4: ['Четверг', 'Чт'],
-  5: ['Пятница', 'Пт'],
-  6: ['Суббота', 'Сб'],
-};
-
-export const monthsNamesEn = {
-  0: 'January',
-  1: 'February',
-  2: 'March',
-  3: 'April',
-  4: 'May',
-  5: 'June',
-  6: 'July',
-  7: 'August',
-  8: 'September',
-  9: 'October',
-  10: 'November',
-  11: 'December',
-};
-
-export const monthsNamesRu = {
-  0: 'Январь',
-  1: 'Февраль',
-  2: 'Март',
-  3: 'Апрель',
-  4: 'Май',
-  5: 'Июнь',
-  6: 'Июль',
-  7: 'Август',
-  8: 'Сентябрь',
-  9: 'Октябрь',
-  10: 'Ноябрь',
-  11: 'Декабрь',
+export const namesOfMonths = {
+  0: {
+    ru: 'Январь',
+    en: 'January',
+  },
+  1: {
+    ru: 'Февраль',
+    en: 'February',
+  },
+  2: {
+    ru: 'Март',
+    en: 'March',
+  },
+  3: {
+    ru: 'Апрель',
+    en: 'April',
+  },
+  4: {
+    ru: 'Май',
+    en: 'May',
+  },
+  5: {
+    ru: 'Июнь',
+    en: 'June',
+  },
+  6: {
+    ru: 'Июль',
+    en: 'July',
+  },
+  7: {
+    ru: 'Август',
+    en: 'August',
+  },
+  8: {
+    ru: 'Сентябрь',
+    en: 'September',
+  },
+  9: {
+    ru: 'Октябрь',
+    en: 'October',
+  },
+  10: {
+    ru: 'Ноябрь',
+    en: 'November',
+  },
+  11: {
+    ru: 'Декабрь',
+    en: 'December',
+  },
 };
 
 export const coordinateNames = {
-  latitudeRu: 'Широта',
-  latitudeEn: 'Latitude',
-  longitudeRu: 'Долгота',
-  longitudeEn: 'Longitude',
+  latitude: {
+    ru: 'Широта',
+    en: 'Latitude',
+  },
+  longitude: {
+    ru: 'Долгота',
+    en: 'Longitude',
+  },
 };
 
-export const weatherDescriptionRu = {
-  feelsStr: 'ощущается',
-  windStr: 'ветер',
-  windSpeedStr: 'м/с',
-  humidityStr: 'влажность',
-};
-
-export const weatherDescriptionEn = {
-  feelsStr: 'feels like',
-  windStr: 'wind',
-  windSpeedStr: 'm/s',
-  humidityStr: 'humidity',
+export const weatherDescription = {
+  feelsStr: {
+    ru: 'ощущается',
+    en: 'feels like',
+  },
+  windStr: {
+    ru: 'ветер',
+    en: 'wind',
+  },
+  windSpeedStr: {
+    ru: 'м/с',
+    en: 'm/s',
+  },
+  humidityStr: {
+    ru: 'влажность',
+    en: 'humidity',
+  },
 };
 
 export const searchAreaNames = {
-  searchEn: 'Search',
-  searchRu: 'Поиск',
-  placeHolderEn: 'Search city',
-  placeHolderRu: 'Введите город',
+  search: {
+    ru: 'Поиск',
+    en: 'Search',
+  },
+  placeHolder: {
+    ru: 'Введите город',
+    en: 'Search city',
+  },
 };

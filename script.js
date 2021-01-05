@@ -1,7 +1,5 @@
 import {
-  namesOfDaysEn, monthsNamesEn, namesOfDaysRu, monthsNamesRu,
-  coordinateNames, weatherDescriptionRu, weatherDescriptionEn,
-  searchAreaNames,
+  namesOfDays, namesOfMonths, coordinateNames, searchAreaNames, weatherDescription,
 } from './translatedNames';
 
 const urlToPictures = `https://api.unsplash.com/photos/random?query=morning&client_id=${process.env.UNSPLASH_KEY}`;
@@ -28,8 +26,12 @@ const languageButtons = document.querySelector('.control__button--languages');
 const activeLanguageButton = document.querySelector('.control__button--active-language');
 const notActiveLanguageButtons = document.querySelectorAll('.control__button--not-active-language');
 
-const languages = ['EN', 'RU'];
-let language = localStorage.getItem('language') || languages[0];
+const languages = {
+  en: 'EN',
+  ru: 'RU',
+};
+
+let language = localStorage.getItem('language') || languages.en;
 let timeInterval;
 let localTimeShift;
 
@@ -74,13 +76,13 @@ if (localStorage.getItem('temperature') === farenheitBadge) {
 
 const translateSearchArea = () => {
   switch (language) {
-    case 'EN':
-      searchField.placeholder = searchAreaNames.placeHolderEn;
-      searchButton.textContent = searchAreaNames.searchEn;
+    case languages.en:
+      searchField.placeholder = searchAreaNames.placeHolder.en;
+      searchButton.textContent = searchAreaNames.search.en;
       break;
-    case 'RU':
-      searchField.placeholder = searchAreaNames.placeHolderRu;
-      searchButton.textContent = searchAreaNames.searchRu;
+    case languages.ru:
+      searchField.placeholder = searchAreaNames.placeHolder.ru;
+      searchButton.textContent = searchAreaNames.search.ru;
       break;
     default:
   }
@@ -88,7 +90,7 @@ const translateSearchArea = () => {
 
 const changeLanguage = () => {
   activeLanguageButton.textContent = language;
-  const restLanguages = languages.filter((elem) => elem !== language);
+  const restLanguages = Object.values(languages).filter((elem) => elem !== language);
 
   for (let i = 0; i < notActiveLanguageButtons.length; i += 1) {
     notActiveLanguageButtons[i].textContent = restLanguages[i];
@@ -113,26 +115,31 @@ const kelvinToFahrenheit = (kelvin) => {
   return Math.abs(temp) ? `${temp}&deg;F` : '0&deg;F';
 };
 
+const getDayAndMonthNames = () => {
+  let names;
+
+  switch (language) {
+    case languages.en:
+      names = [namesOfDays[day].en, namesOfMonths[month].en];
+      break;
+    case languages.ru:
+      names = [namesOfDays[day].ru, namesOfMonths[month].ru];
+      break;
+    default:
+      break;
+  }
+
+  return names;
+};
+
 const getDateString = (timeShift) => {
   const nowDate = new Date();
   const millisecondsUTC = nowDate.getTime() - localTimeShift;
   const newCountryMilliseconds = new Date(millisecondsUTC + timeShift * MILLISECONDS_IN_SECOND);
   const time = newCountryMilliseconds.toLocaleTimeString();
 
-  let nameOfMonth;
-  let nameOfday;
-
-  switch (language) {
-    case 'EN':
-      nameOfMonth = monthsNamesEn[month];
-      nameOfday = namesOfDaysEn[day].slice(0, 3);
-      break;
-    case 'RU':
-      nameOfMonth = monthsNamesRu[month];
-      [, nameOfday] = namesOfDaysRu[day];
-      break;
-    default:
-  }
+  const [nameOfDay, nameOfMonth] = getDayAndMonthNames();
+  const [, shortDaysName] = nameOfDay;
 
   if (startDate !== newCountryMilliseconds.toDateString()) {
     startDate = newCountryMilliseconds.toDateString();
@@ -141,7 +148,7 @@ const getDateString = (timeShift) => {
     month = newCountryMilliseconds.getMonth();
   }
 
-  return `${nameOfday} ${date} ${nameOfMonth} ${time}`;
+  return `${shortDaysName} ${date} ${nameOfMonth} ${time}`;
 };
 
 const getLinkToImage = async () => {
@@ -154,10 +161,10 @@ const getLinkToImage = async () => {
 const getCityName = ({ name }, { country }) => {
   let cityName;
   switch (language) {
-    case 'EN':
+    case languages.en:
       cityName = country ? `${name}, ${country.english}` : name;
       break;
-    case 'RU':
+    case languages.ru:
       cityName = country ? `${name}, ${country.name}` : name;
       break;
     default:
@@ -166,10 +173,29 @@ const getCityName = ({ name }, { country }) => {
   return cityName;
 };
 
-const printNowWeather = (tempFunc, weatherDescription, weatherObject) => {
-  const {
-    feelsStr, windStr, windSpeedStr, humidityStr,
-  } = weatherDescription;
+const printNowWeather = (tempFunc, weatherObject) => {
+  let feelsStr;
+  let windStr;
+  let windSpeedStr;
+  let humidityStr;
+
+  switch (language) {
+    case languages.en:
+      feelsStr = weatherDescription.feelsStr.en;
+      windStr = weatherDescription.windStr.en;
+      windSpeedStr = weatherDescription.windSpeedStr.en;
+      humidityStr = weatherDescription.humidityStr.en;
+      break;
+    case languages.ru:
+      feelsStr = weatherDescription.feelsStr.ru;
+      windStr = weatherDescription.windStr.ru;
+      windSpeedStr = weatherDescription.windSpeedStr.ru;
+      humidityStr = weatherDescription.humidityStr.ru;
+      break;
+    default:
+      break;
+  }
+
   const [weatherType, weatherFeels, weatherWind, weatherHumidity] = weatherDescriptions;
   weatherType.textContent = weatherObject.weather[0].description.toUpperCase();
   weatherFeels.innerHTML = `${feelsStr}: ${tempFunc(weatherObject.main.feels_like)}`;
@@ -179,39 +205,44 @@ const printNowWeather = (tempFunc, weatherDescription, weatherObject) => {
   weatherNowImage.setAttribute('src', `http://openweathermap.org/img/wn/${weatherObject.weather[0].icon}@2x.png`);
 };
 
-const printForecast = (temperatureFunc, daysNames, forecastObject) => {
+const printForecast = (temperatureFunc, forecastObject) => {
   const days = forecastObject.daily;
+
   for (let i = 0; i < forecastTemperature.length; i += 1) {
     const dayOfWeek = new Date(days[i + 1].dt * MILLISECONDS_IN_SECOND).getDay();
-    forecastNamesOfDays[i].textContent = Array.isArray(daysNames[dayOfWeek])
-      ? daysNames[dayOfWeek][0] : daysNames[dayOfWeek].toUpperCase();
+
+    let daysName;
+    switch (language) {
+      case languages.en:
+        daysName = namesOfDays[dayOfWeek].en;
+        break;
+      case languages.ru:
+        daysName = namesOfDays[dayOfWeek].ru;
+        break;
+      default:
+        break;
+    }
+
+    [forecastNamesOfDays[i].textContent] = daysName;
     forecastTemperature[i].innerHTML = `${temperatureFunc(forecastObject.daily[i + 1].temp.day)}`;
     weatherForecastImages[i].setAttribute('src', `http://openweathermap.org/img/wn/${forecastObject.daily[i + 1].weather[0].icon}@2x.png`);
   }
 };
 
-const chooseTemp = (temperature, weatherDescription, namesOfDays, weatherAndForecastData) => {
+const chooseTemp = (temperature, weatherAndForecastData) => {
   const { weatherData, forecastData } = weatherAndForecastData;
 
   if (temperature.textContent[0] === celsiusBadge) {
-    printNowWeather(kelvinToCelsius, weatherDescription, weatherData);
-    printForecast(kelvinToCelsius, namesOfDays, forecastData);
+    printNowWeather(kelvinToCelsius, weatherData);
+    printForecast(kelvinToCelsius, forecastData);
   } else {
-    printNowWeather(kelvinToFahrenheit, weatherDescription, weatherData);
-    printForecast(kelvinToFahrenheit, namesOfDays, forecastData);
+    printNowWeather(kelvinToFahrenheit, weatherData);
+    printForecast(kelvinToFahrenheit, forecastData);
   }
 };
 
 const printWeatherAndForecast = (temperature, weatherData) => {
-  switch (language) {
-    case 'EN':
-      chooseTemp(temperature, weatherDescriptionEn, namesOfDaysEn, weatherData);
-      break;
-    case 'RU':
-      chooseTemp(temperature, weatherDescriptionRu, namesOfDaysRu, weatherData);
-      break;
-    default:
-  }
+  chooseTemp(temperature, weatherData);
 };
 
 const printCoordinate = (weatherObject) => {
@@ -222,13 +253,13 @@ const printCoordinate = (weatherObject) => {
   const secondCoordinateMinutes = String(secondCoordinate).split('.')[1].slice(0, 2);
 
   switch (language) {
-    case 'EN':
-      latitude.innerHTML = `${coordinateNames.latitudeEn}: ${secondCoordinateDegree}&deg;${secondCoordinateMinutes}'`;
-      longitude.innerHTML = `${coordinateNames.longitudeEn}: ${firstCoordinateDegree}&deg;${firstCoordinateMinutes}'`;
+    case languages.en:
+      latitude.innerHTML = `${coordinateNames.latitude.en}: ${secondCoordinateDegree}&deg;${secondCoordinateMinutes}'`;
+      longitude.innerHTML = `${coordinateNames.longitude.en}: ${firstCoordinateDegree}&deg;${firstCoordinateMinutes}'`;
       break;
-    case 'RU':
-      latitude.innerHTML = `${coordinateNames.latitudeRu}: ${secondCoordinateDegree}&deg;${secondCoordinateMinutes}'`;
-      longitude.innerHTML = `${coordinateNames.longitudeRu}: ${firstCoordinateDegree}&deg;${firstCoordinateMinutes}'`;
+    case languages.ru:
+      latitude.innerHTML = `${coordinateNames.latitude.ru}: ${secondCoordinateDegree}&deg;${secondCoordinateMinutes}'`;
+      longitude.innerHTML = `${coordinateNames.longitude.ru}: ${firstCoordinateDegree}&deg;${firstCoordinateMinutes}'`;
       break;
     default:
   }

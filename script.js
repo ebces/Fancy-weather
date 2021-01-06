@@ -75,17 +75,10 @@ if (localStorage.getItem('temperature') === farenheitBadge) {
 }
 
 const translateSearchArea = () => {
-  switch (language) {
-    case languages.en:
-      searchField.placeholder = searchAreaNames.placeHolder.en;
-      searchButton.textContent = searchAreaNames.search.en;
-      break;
-    case languages.ru:
-      searchField.placeholder = searchAreaNames.placeHolder.ru;
-      searchButton.textContent = searchAreaNames.search.ru;
-      break;
-    default:
-  }
+  const lang = language.toLowerCase();
+
+  searchField.placeholder = searchAreaNames.placeHolder[lang];
+  searchButton.textContent = searchAreaNames.search[lang];
 };
 
 const changeLanguage = () => {
@@ -116,20 +109,9 @@ const kelvinToFahrenheit = (kelvin) => {
 };
 
 const getDayAndMonthNames = () => {
-  let names;
+  const lang = language.toLowerCase();
 
-  switch (language) {
-    case languages.en:
-      names = [namesOfDays[day].en, namesOfMonths[month].en];
-      break;
-    case languages.ru:
-      names = [namesOfDays[day].ru, namesOfMonths[month].ru];
-      break;
-    default:
-      break;
-  }
-
-  return names;
+  return [namesOfDays[day][lang], namesOfMonths[month][lang]];
 };
 
 const getDateString = (timeShift) => {
@@ -159,42 +141,21 @@ const getLinkToImage = async () => {
 };
 
 const getCityName = ({ name }, { country }) => {
-  let cityName;
-  switch (language) {
-    case languages.en:
-      cityName = country ? `${name}, ${country.english}` : name;
-      break;
-    case languages.ru:
-      cityName = country ? `${name}, ${country.name}` : name;
-      break;
-    default:
+  if (country) {
+    const countryName = language === languages.ru ? country.name : country.english;
+    return `${name}, ${countryName}`;
   }
 
-  return cityName;
+  return name;
 };
 
 const printNowWeather = (tempFunc, weatherObject) => {
-  let feelsStr;
-  let windStr;
-  let windSpeedStr;
-  let humidityStr;
+  const lang = language.toLowerCase();
 
-  switch (language) {
-    case languages.en:
-      feelsStr = weatherDescription.feelsStr.en;
-      windStr = weatherDescription.windStr.en;
-      windSpeedStr = weatherDescription.windSpeedStr.en;
-      humidityStr = weatherDescription.humidityStr.en;
-      break;
-    case languages.ru:
-      feelsStr = weatherDescription.feelsStr.ru;
-      windStr = weatherDescription.windStr.ru;
-      windSpeedStr = weatherDescription.windSpeedStr.ru;
-      humidityStr = weatherDescription.humidityStr.ru;
-      break;
-    default:
-      break;
-  }
+  const feelsStr = weatherDescription.feelsStr[lang];
+  const windStr = weatherDescription.windStr[lang];
+  const windSpeedStr = weatherDescription.windSpeedStr[lang];
+  const humidityStr = weatherDescription.humidityStr[lang];
 
   const [weatherType, weatherFeels, weatherWind, weatherHumidity] = weatherDescriptions;
   weatherType.textContent = weatherObject.weather[0].description.toUpperCase();
@@ -207,21 +168,11 @@ const printNowWeather = (tempFunc, weatherObject) => {
 
 const printForecast = (temperatureFunc, forecastObject) => {
   const days = forecastObject.daily;
+  const lang = language.toLowerCase();
 
   for (let i = 0; i < forecastTemperature.length; i += 1) {
     const dayOfWeek = new Date(days[i + 1].dt * MILLISECONDS_IN_SECOND).getDay();
-
-    let daysName;
-    switch (language) {
-      case languages.en:
-        daysName = namesOfDays[dayOfWeek].en;
-        break;
-      case languages.ru:
-        daysName = namesOfDays[dayOfWeek].ru;
-        break;
-      default:
-        break;
-    }
+    const daysName = namesOfDays[dayOfWeek][lang];
 
     [forecastNamesOfDays[i].textContent] = daysName;
     forecastTemperature[i].innerHTML = `${temperatureFunc(forecastObject.daily[i + 1].temp.day)}`;
@@ -251,18 +202,10 @@ const printCoordinate = (weatherObject) => {
   const firstCoordinateMinutes = String(firstCoordinate).split('.')[1].slice(0, 2);
   const secondCoordinateDegree = Number(secondCoordinate).toFixed();
   const secondCoordinateMinutes = String(secondCoordinate).split('.')[1].slice(0, 2);
+  const lang = language.toLowerCase();
 
-  switch (language) {
-    case languages.en:
-      latitude.innerHTML = `${coordinateNames.latitude.en}: ${secondCoordinateDegree}&deg;${secondCoordinateMinutes}'`;
-      longitude.innerHTML = `${coordinateNames.longitude.en}: ${firstCoordinateDegree}&deg;${firstCoordinateMinutes}'`;
-      break;
-    case languages.ru:
-      latitude.innerHTML = `${coordinateNames.latitude.ru}: ${secondCoordinateDegree}&deg;${secondCoordinateMinutes}'`;
-      longitude.innerHTML = `${coordinateNames.longitude.ru}: ${firstCoordinateDegree}&deg;${firstCoordinateMinutes}'`;
-      break;
-    default:
-  }
+  latitude.innerHTML = `${coordinateNames.latitude[lang]}: ${secondCoordinateDegree}&deg;${secondCoordinateMinutes}'`;
+  longitude.innerHTML = `${coordinateNames.longitude[lang]}: ${firstCoordinateDegree}&deg;${firstCoordinateMinutes}'`;
 };
 
 const printCity = (weatherObject, countryObject) => {

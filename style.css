@@ -1,0 +1,292 @@
+body {
+    margin: 0;
+    background-size: cover;
+    font-family: sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.wrapper {
+    background-color: #00000071;
+    margin: 0 auto;
+    display: flex;
+    width: 95%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5px;
+}
+
+.control {
+    display: flex;
+    width: 300px;
+}
+
+.control__refresh-image {
+    width: 40%;
+}
+
+.control__arrow-image {
+    width: 15%;
+    transform: translateY(-2px);    
+}
+
+.control__button,
+.search__button {
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    margin: 0 10px;
+    border-radius: 10px;
+    border: none;
+    color: #ffffff;
+    background-color: #ffffff54;
+}
+
+.control__button:focus,
+.search__button:focus {
+    outline: none;
+}
+
+.search__button:hover {
+    background-color: #585858;
+    transition: .2s;
+}
+
+.control__button--farenheit {
+    border-radius: 10px 0 0 10px;
+}
+
+.control__button--celsius {
+    border-radius: 0 10px 10px 0;
+    margin-left: -10px;
+}
+
+.control__button--refresh {
+    background-image: url(assets/images/refresh.svg);
+    background-color: #0086fc00;
+    background-size: 100%;
+}
+
+.control__button--languages {
+    line-height: 50px;
+    padding-left: 5px;
+    position: relative;
+}
+
+.control__button--language {
+    position: absolute;
+    width: 100%;
+    left: -10px;
+    top: 0;
+    opacity: 0;
+    transition: .3s;
+    text-align: center;
+}
+
+.control__button--active-language {
+    opacity: 1;
+}
+
+.control__button--languages:hover .control__button--not-active-language {
+    opacity: 1;
+    left: -10px;
+    top: 50px;
+    width: 100%;
+}
+
+.control__button:hover,
+.control__button--active {
+    background-color: #585858;
+}
+
+.control__arrow-image {
+    transition: .5s;
+}
+
+.control__button--languages:hover .control__arrow-image {
+    transform: rotate(180deg) translateY(2px);
+}
+
+.search__input {
+    height: 50px;
+    color: #ffffff;
+    background-color: #4b4b4b75;
+    border: none;
+    border-radius: 10px;
+}
+
+.search__input::placeholder {
+    color: #ffffff;
+}
+
+.search__button {
+    width: 100px;
+}
+
+.weather {
+    width: 50%;
+    color: #ffffff;
+}
+
+.weather__city {
+    font-size: 5vw;
+    font-weight: bold;
+    margin: 20px 0 0 0;
+}
+
+.weather__date {
+    font-size: 2vw;
+    margin: 0;
+}
+
+.weather__weather-now {
+    display: flex;
+    justify-content: space-between;
+}
+
+.weather__temperature {
+    display: flex;
+    align-items: center;
+    font-size: 10vw;
+    font-weight: bold;
+    margin: 0;
+}
+
+.weather__image {
+    width: 10vw;
+}
+
+.weather__forecast {
+    display: flex;
+    justify-content: space-around;
+}
+
+.weather__day-forecast {
+    width: 33.3%;
+}
+
+.weather__day {
+    margin: 0;
+}
+
+.weather__forecast-temperature {
+    font-size: 5vw;
+}
+
+.weather__forecast-image {
+    width: 4vw;
+}
+
+.location {
+    color: #ffffff;
+}
+
+#map {
+    width: 35vw;
+    height: 34vw;
+    border-radius: 10px;
+}
+
+.location__coordinates {
+    margin: 0;
+}
+
+.location__coordinates--latitude {
+    margin-top: 5px;
+}
+
+.weather__weather-description {
+    width: 160px;
+}
+
+.weather__text-description {
+    text-transform: uppercase;
+}
+
+@media (max-width: 700px) {
+    .wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    header .wrapper {
+        flex-direction: row;
+    }
+
+    .control {
+        justify-content: center;
+    }
+
+    .location {
+        width: 100%;
+    }
+
+    .weather {
+        width: 100%;
+    }
+
+    .weather__date {
+        font-size: 3vw;
+    }
+
+    .weather__temperature {
+        font-size: 20vw;
+    }
+
+    .weather__text-description {
+        font-size: 4vw;
+    }
+
+    .weather__weather-description {
+        width: 40vw;
+    }
+
+    .weather__day {
+        font-size: 4vw;
+    }
+
+    #map {
+        margin-top: 10px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 630px) {
+    header .wrapper {
+        flex-direction: column-reverse;
+    }
+
+    .control {
+        margin-top: 10px;
+    }
+
+    .control__button {
+        width: 15vw;
+        height: 10vw;
+    }
+
+    .control__button--languages {
+        line-height: 9vw;
+    }
+
+    .control__button--language {
+        width: 100%;
+        height: 100%;
+        line-height: 10vw;
+    }
+
+    .search__button {
+        height: 10vw;
+    }
+
+    .search__input {
+        height: 10vw;
+        width: 40vw;
+    }
+
+    .control__button--languages:hover .control__button--not-active-language {
+        top: 100%;
+    }
+}

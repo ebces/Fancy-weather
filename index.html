@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fancy weather</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href = "data:,">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
+</head>
+<body>
+  <header>
+    <div class="wrapper">
+      <div class="control">
+        <button class="control__button control__button--refresh">
+          <img src="assets/images/Vector.svg" alt="refresh" class="control__refresh-image">
+        </button>
+        <div class="control__button control__button--languages">
+          <div class="control__button control__button--language control__button--active-language">EN</div>
+          <div class="control__button control__button--language control__button--not-active-language">RU</div>
+          <img src="assets/images/Vector(Stroke).svg" alt="arrow" class="control__arrow-image">
+        </div>
+        <button class="control__button control__button--temperature control__button--farenheit">F&deg;</button>
+        <button class="control__button control__button--temperature control__button--celsius">C&deg;</button>
+      </div>
+      <div class="search">
+        <input type="text" class="search__input">
+        <button class="search__button"></button>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="wrapper">
+      <div class="weather">
+        <div class="weather__location-and-date">
+          <p class="weather__city"></p>
+          <p class="weather__date"></p>
+        </div>
+        <div class="weather__weather-now">
+          <p class="weather__temperature"></p>
+          <div class="weather__weather-description">
+            <img src="data:," alt="" class="weather__image">
+            <div class="weather__text-description">
+              <p class="weather__text"></p>
+              <p class="weather__text"></p>
+              <p class="weather__text"></p>
+              <p class="weather__text"></p>
+            </div>
+          </div>
+        </div>
+        <div class="weather__forecast">
+          <div class="weather__day-forecast">
+            <p class="weather__day"></p>
+            <span class="weather__forecast-temperature"></span>
+            <img src="data:," alt="" class="weather__forecast-image">
+          </div>
+          <div class="weather__day-forecast">
+            <p class="weather__day"></p>
+            <span class="weather__forecast-temperature"></span>
+            <img src="data:," alt="" class="weather__forecast-image">
+          </div>
+          <div class="weather__day-forecast">
+            <p class="weather__day"></p>
+            <span class="weather__forecast-temperature"></span>
+            <img src="data:," alt="" class="weather__forecast-image">
+          </div>
+        </div>
+      </div>
+      <div class="location">
+        <div class="location__map" id="map"></div>
+        <p class="location__coordinates location__coordinates--latitude"></p>
+        <p class="location__coordinates location__coordinates--longitude"></p>
+      </div>
+    </div>
+  </main>
+  <script src="./dist/script_bundle.js"></script>
+</body>
+</html>
